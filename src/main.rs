@@ -15,6 +15,8 @@ fn main() {
 
     // Unravel some loops for faster calculations
 
+    // Calculate 2s and 3s as they do ot follow the format 6k+1 or 6k-1
+
     // Every even number after 2 is not prime
     let mut i: usize = 4;
     while i < n_primes {
@@ -32,7 +34,9 @@ fn main() {
 
     // Every prime is of the form 6k+1 or 6k-1, so iterate only over those
     let mut i: usize = 6;
-    while i < n_primes {
+    // Go only until sqrt(n_primes) as we already know that the rest are not prime
+    let go_until: usize = ((n_primes as f64).sqrt() as usize) + 1;
+    while i < go_until {
         if primes[i - 1] {
             let mut j = (i - 1) * (i - 1);
             while j < n_primes {
@@ -52,6 +56,8 @@ fn main() {
         }
         i += 6;
     }
+
+    println!("Calculations done. Printing results...\n");
 
     // print all primes without changing line
     for i in 2..n_primes {
