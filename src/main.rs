@@ -13,14 +13,44 @@ fn main() {
     primes[0] = false;
     primes[1] = false;
 
-    for i in 2..n_primes {
-        if primes[i] {
-            let mut j = i * i;
+    // Unravel some loops for faster calculations
+
+    // Every even number after 2 is not prime
+    let mut i: usize = 4;
+    while i < n_primes {
+        primes[i] = false;
+        i += 2;
+    }
+
+    // Every multiple of 3 is not a prime number
+    let mut i: usize = 9;
+    while i < n_primes {
+        primes[i] = false;
+        // 6 by 6 as we already know that even numbers are not prime
+        i += 6;
+    }
+
+    // Every prime is of the form 6k+1 or 6k-1, so iterate only over those
+    let mut i: usize = 6;
+    while i < n_primes {
+        if primes[i - 1] {
+            let mut j = (i - 1) * (i - 1);
             while j < n_primes {
                 primes[j] = false;
-                j += i;
+                // multiply by 2 as we don't need to check even numbers
+                j += (i - 1) * 2;
             }
         }
+
+        if primes[i + 1] {
+            let mut j = (i + 1) * (i + 1);
+            while j < n_primes {
+                primes[j] = false;
+                // multiply by 2 as we don't need to check even numbers
+                j += (i + 1) * 2;
+            }
+        }
+        i += 6;
     }
 
     // print all primes without changing line
