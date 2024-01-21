@@ -9,9 +9,12 @@ fn main() {
     // Print input
     println!("Your input: {}", n_primes);
 
-    // Calculate primes
+    // Calculate time for calculations
+    let start = std::time::Instant::now();
     let primes = sieve::sieve_of_eratosthenes(n_primes);
+    let duration = start.elapsed();
 
+    println!("Time elapsed in sieve_of_eratosthenes() is: {:?}", duration);
     println!("Calculations done. Printing results...\n");
 
     // print all primes without changing line
