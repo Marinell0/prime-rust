@@ -29,24 +29,25 @@ pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<bool> {
     let go_until: usize = ((n_primes as f64).sqrt() as usize) + 1;
     while i < go_until {
         if primes[i - 1] {
-            let mut j = (i - 1) * (i - 1);
-            while j < n_primes {
-                primes[j] = false;
-                // multiply by 2 as we don't need to check even numbers
-                j += (i - 1) * 2;
-            }
+            set_multiples_false(&mut primes, i - 1, n_primes);
         }
 
         if primes[i + 1] {
-            let mut j = (i + 1) * (i + 1);
-            while j < n_primes {
-                primes[j] = false;
-                // multiply by 2 as we don't need to check even numbers
-                j += (i + 1) * 2;
-            }
+            set_multiples_false(&mut primes, i + 1, n_primes);
         }
         i += 6;
     }
 
     return primes;
+}
+
+fn set_multiples_false(primes: &mut Vec<bool>, i: usize, n_primes: usize) {
+    let mut j = i * i;
+    let to_add = i * 2;
+
+    while j < n_primes {
+        primes[j] = false;
+        // multiply by 2 as we don't need to check even numbers
+        j += to_add;
+    }
 }
