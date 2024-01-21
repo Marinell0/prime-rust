@@ -48,11 +48,25 @@ pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<u64> {
 }
 
 pub fn segmented_sieve_of_eratosthenes(n_primes: usize, segment_size: usize) -> Vec<u64> {
-    let mut primes: Vec<usize> = sieve_of_eratosthenes(segment_size).iter().map(|&x| x as usize).collect();
-    let num_primes = primes.len();
+    let sqrt_nprimes = (n_primes as f64).sqrt() as usize + 1;
+
+    let look_ahead;
+    if n_primes < segment_size {
+        look_ahead = n_primes;
+    } else {
+        look_ahead = match sqrt_nprimes > segment_size {
+            true => sqrt_nprimes,
+            false => segment_size,
+        };
+    }
+
+    let mut primes: Vec<usize> = sieve_of_eratosthenes(look_ahead).iter().map(|&x| x as usize).collect();
 
     let mut low = segment_size;
     let mut high = segment_size * 2;
+
+    // let sqrt_nprimes = (n_primes as f64).sqrt() as usize + 1;
+    let num_primes = primes.len();
 
     while low < n_primes {
         if high >= n_primes {
@@ -61,6 +75,9 @@ pub fn segmented_sieve_of_eratosthenes(n_primes: usize, segment_size: usize) -> 
 
         let mut segment: Vec<bool> = vec![true; segment_size];
 
+        // Look until primes.len() if len is lower than sqrt of n_primes
+        // Otherwise, look until sqrt of n_primes
+        // let num_primes = sqrt_nprimes.min(primes.len());
         for i in 0..num_primes {
             let mut low_limit = (low / primes[i]) * primes[i];
             if low_limit < low {
