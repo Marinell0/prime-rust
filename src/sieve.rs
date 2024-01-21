@@ -1,4 +1,4 @@
-pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<usize> {
+pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<u64> {
     // Calculate primes
     let mut primes: Vec<bool> = vec![true; n_primes];
     primes[0] = false;
@@ -27,7 +27,7 @@ pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<usize> {
     let mut i: usize = 6;
     // Go only until sqrt(n_primes) as we already know that the rest are not prime
     let go_until: usize = ((n_primes as f64).sqrt() as usize) + 1;
-    while i < go_until {
+    while i <= go_until {
         if primes[i - 1] {
             set_multiples_false(&mut primes, i - 1, n_primes);
         }
@@ -44,7 +44,47 @@ pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<usize> {
         .map(|(index, _)| index)
         .collect();
 
-    return real_primes;
+    return real_primes.iter().map(|&x| x as u64).collect();
+}
+
+pub fn segmented_sieve_of_eratosthenes(n_primes: usize, segment_size: usize) -> Vec<u64> {
+    let mut primes: Vec<usize> = sieve_of_eratosthenes(segment_size).iter().map(|&x| x as usize).collect();
+    let num_primes = primes.len();
+
+    let mut low = segment_size;
+    let mut high = segment_size * 2;
+
+    while low < n_primes {
+        if high >= n_primes {
+            high = n_primes;
+        }
+
+        let mut segment: Vec<bool> = vec![true; segment_size];
+
+        for i in 0..num_primes {
+            let mut low_limit = (low / primes[i]) * primes[i];
+            if low_limit < low {
+                low_limit += primes[i];
+            }
+
+            let mut j = low_limit;
+            while j < high {
+                segment[j - low] = false;
+                j += primes[i];
+            }
+        }
+
+        for i in low..high {
+            if segment[i - low] {
+                // Add primes to the already defined primes array
+                primes.push(i);
+            }
+        }
+
+        low += segment_size;
+        high += segment_size;
+    }
+    return primes.iter().map(|&x| x as u64).collect();
 }
 
 fn set_multiples_false(primes: &mut Vec<bool>, i: usize, n_primes: usize) {

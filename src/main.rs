@@ -11,7 +11,11 @@ fn main() {
 
     // Calculate time for calculations
     let start = std::time::Instant::now();
-    let primes = sieve::sieve_of_eratosthenes(n_primes);
+    // segment_size should be the size of the L1 cache
+    // The R5 3600 has 386KB of L1 cache, so we use that for better locality
+    let segment_size = (386 * 1024) / 64;
+    let primes = sieve::segmented_sieve_of_eratosthenes(n_primes, segment_size);
+    // let primes = sieve::sieve_of_eratosthenes(n_primes);
     let duration = start.elapsed();
 
     println!("Time elapsed in sieve_of_eratosthenes() is: {:?}", duration);
