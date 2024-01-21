@@ -17,15 +17,14 @@ fn main() {
     println!("Time elapsed in sieve_of_eratosthenes() is: {:?}", duration);
     println!("Calculations done. Printing results...\n");
 
+    let num_primes = primes.len();
     // print all primes without changing line
-    for i in 2..n_primes {
-        if primes[i] {
-            print!("{} ", i);
-        }
-    }
+    // for i in 0..num_primes {
+    //     print!("{} ", primes[i]);
+    // }
 
     println!("\n");
-    println!("There are {} prime numbers between 1 and {}.", primes.iter().filter(|&&x| x).count(), n_primes);
+    println!("There are {} prime numbers between 1 and {}.", num_primes, n_primes);
     println!("\n");
 }
 

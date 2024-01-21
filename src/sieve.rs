@@ -1,4 +1,4 @@
-pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<bool> {
+pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<usize> {
     // Calculate primes
     let mut primes: Vec<bool> = vec![true; n_primes];
     primes[0] = false;
@@ -38,7 +38,13 @@ pub fn sieve_of_eratosthenes(n_primes: usize) -> Vec<bool> {
         i += 6;
     }
 
-    return primes;
+    // Convert to vector of primes
+    let real_primes: Vec<usize> = primes.iter().enumerate()
+        .filter(|(_, &is_prime)| is_prime)
+        .map(|(index, _)| index)
+        .collect();
+
+    return real_primes;
 }
 
 fn set_multiples_false(primes: &mut Vec<bool>, i: usize, n_primes: usize) {
